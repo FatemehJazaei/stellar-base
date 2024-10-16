@@ -42,7 +42,7 @@ enum SCValType
     SCV_U128 = 9,
     SCV_I128 = 10,
 
-    // 256 bits is the size of sha256 output, dilithium2 keys, and the EVM machine
+    // 256 bits is the size of sha256 output and the EVM machine
     // word, so for interop use we include this even though it requires a small
     // amount of Rust guest and/or host library code.
     SCV_U256 = 11,
