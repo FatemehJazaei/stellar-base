@@ -1,4 +1,4 @@
-XDR_BASE_URL_CURR=https://github.com/stellar/stellar-xdr/raw/1a04392432dacc0092caaeae22a600ea1af3c6a5
+
 XDR_BASE_LOCAL_CURR=xdr/curr
 XDR_FILES_CURR= \
 	Stellar-SCP.x \
@@ -14,7 +14,7 @@ XDR_FILES_CURR= \
 	Stellar-contract-config-setting.x
 XDR_FILES_LOCAL_CURR=$(addprefix xdr/curr/,$(XDR_FILES_CURR))
 
-XDR_BASE_URL_NEXT=https://github.com/stellar/stellar-xdr/raw/4bd4827b3361f266d295cbc83c5d7f7396d782d9
+
 XDR_BASE_LOCAL_NEXT=xdr/next
 XDR_FILES_NEXT= \
 	Stellar-SCP.x \
@@ -79,14 +79,6 @@ types/next.d.ts: src/generated/next_generated.js
 
 clean:
 	rm -f src/generated/*
-
-$(XDR_FILES_LOCAL_CURR):
-	mkdir -p $(dir $@)
-	curl -L -o $@ $(XDR_BASE_URL_CURR)/$(notdir $@)
-
-$(XDR_FILES_LOCAL_NEXT):
-	mkdir -p $(dir $@)
-	curl -L -o $@ $(XDR_BASE_URL_NEXT)/$(notdir $@)
 
 reset-xdr:
 	rm -f xdr/*/*.x
