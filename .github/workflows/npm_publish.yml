@@ -1,0 +1,39 @@
+name: npm publish
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install Depencencies
+        run: yarn install
+
+      - name: Test & Build
+        run: yarn preversion
+
+      - name: Publish npm package to both places
+        run: |
+          yarn publish --access public
+          sed -i -e 's#"@stellar/stellar-base"#"stellar-base"#' package.json
+          yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Deprecate the old package
+        run: |
+          V=$(cat package.json | jq '.version' | sed -e 's/\"//g')
+          echo "Deprecating stellar-base@$V"
+          npm deprecate stellar-base@"<= $V" "⚠️ This package has moved to @stellar/stellar-base! 🚚"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
