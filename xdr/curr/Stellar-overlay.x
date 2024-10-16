@@ -35,7 +35,7 @@ struct SendMoreExtended
 
 struct AuthCert
 {
-    Curve25519Public pubkey;
+    Dilithium2Public pubkey;
     uint64 expiration;
     Signature sig;
 };
@@ -144,7 +144,7 @@ struct SurveyRequestMessage
     NodeID surveyorPeerID;
     NodeID surveyedPeerID;
     uint32 ledgerNum;
-    Curve25519Public encryptionKey;
+    Dilithium2Public encryptionKey;
     SurveyMessageCommandType commandType;
 };
 

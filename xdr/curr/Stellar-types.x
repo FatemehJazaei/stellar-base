@@ -28,52 +28,52 @@ case 0:
 
 enum CryptoKeyType
 {
-    KEY_TYPE_ED25519 = 0,
+    KEY_TYPE_DILITHIUM2 = 0,
     KEY_TYPE_PRE_AUTH_TX = 1,
     KEY_TYPE_HASH_X = 2,
-    KEY_TYPE_ED25519_SIGNED_PAYLOAD = 3,
+    KEY_TYPE_DILITHIUM2_SIGNED_PAYLOAD = 3,
     // MUXED enum values for supported type are derived from the enum values
     // above by ORing them with 0x100
-    KEY_TYPE_MUXED_ED25519 = 0x100
+    KEY_TYPE_MUXED_DILITHIUM2 = 0x100
 };
 
 enum PublicKeyType
 {
-    PUBLIC_KEY_TYPE_ED25519 = KEY_TYPE_ED25519
+    PUBLIC_KEY_TYPE_DILITHIUM2 = KEY_TYPE_DILITHIUM2
 };
 
 enum SignerKeyType
 {
-    SIGNER_KEY_TYPE_ED25519 = KEY_TYPE_ED25519,
+    SIGNER_KEY_TYPE_DILITHIUM2 = KEY_TYPE_DILITHIUM2,
     SIGNER_KEY_TYPE_PRE_AUTH_TX = KEY_TYPE_PRE_AUTH_TX,
     SIGNER_KEY_TYPE_HASH_X = KEY_TYPE_HASH_X,
-    SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD = KEY_TYPE_ED25519_SIGNED_PAYLOAD
+    SIGNER_KEY_TYPE_DILITHIUM2_SIGNED_PAYLOAD = KEY_TYPE_DILITHIUM2_SIGNED_PAYLOAD
 };
 
 union PublicKey switch (PublicKeyType type)
 {
-case PUBLIC_KEY_TYPE_ED25519:
-    uint256 ed25519;
+case PUBLIC_KEY_TYPE_DILITHIUM2:
+    opaque dilithium2[1312];
 };
 
 union SignerKey switch (SignerKeyType type)
 {
-case SIGNER_KEY_TYPE_ED25519:
-    uint256 ed25519;
+case SIGNER_KEY_TYPE_DILITHIUM2:
+    opaque dilithium2[1312];
 case SIGNER_KEY_TYPE_PRE_AUTH_TX:
     /* SHA-256 Hash of TransactionSignaturePayload structure */
     uint256 preAuthTx;
 case SIGNER_KEY_TYPE_HASH_X:
     /* Hash of random 256 bit preimage X */
     uint256 hashX;
-case SIGNER_KEY_TYPE_ED25519_SIGNED_PAYLOAD:
+case SIGNER_KEY_TYPE_DILITHIUM2_SIGNED_PAYLOAD:
     struct
     {
         /* Public key that must sign the payload. */
-        uint256 ed25519;
-        /* Payload to be raw signed by ed25519. */
+        opaque dilithium2[1312];
+        /* Payload to be raw signed by dilithium2. */
         opaque payload<64>;
-    } ed25519SignedPayload;
+    } dilithium2SignedPayload;
 };
 
 // variable size as the size depends on the signature scheme used
@@ -84,14 +84,14 @@ typedef opaque SignatureHint[4];
 typedef PublicKey NodeID;
 typedef PublicKey AccountID;
 
-struct Curve25519Secret
+struct Dilithium2Secret
 {
     opaque key[32];
 };
 
-struct Curve25519Public
+struct Dilithium2Public
 {
-    opaque key[32];
+    opaque key[1312];
 };
 
 struct HmacSha256Key

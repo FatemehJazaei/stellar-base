@@ -20,14 +20,14 @@ case LIQUIDITY_POOL_CONSTANT_PRODUCT:
 // Source or destination of a payment operation
 union MuxedAccount switch (CryptoKeyType type)
 {
-case KEY_TYPE_ED25519:
-    uint256 ed25519;
-case KEY_TYPE_MUXED_ED25519:
+case KEY_TYPE_DILITHIUM2:
+    opaque dilithium2[1312];
+case KEY_TYPE_MUXED_DILITHIUM2:
     struct
     {
         uint64 id;
-        uint256 ed25519;
-    } med25519;
+        opaque dilithium2[1312];
+    } mdilithium2;
 };
 
 struct DecoratedSignature
@@ -834,14 +834,14 @@ struct SorobanTransactionData
 };
 
 // TransactionV0 is a transaction with the AccountID discriminant stripped off,
-// leaving a raw ed25519 public key to identify the source account. This is used
+// leaving a raw dilithium2 public key to identify the source account. This is used
 // for backwards compatibility starting from the protocol 12/13 boundary. If an
 // "old-style" TransactionEnvelope containing a Transaction is parsed with this
 // XDR definition, it will be parsed as a "new-style" TransactionEnvelope
 // containing a TransactionV0.
 struct TransactionV0
 {
-    uint256 sourceAccountEd25519;
+    opaque sourceAccountDilithium2[1312];
     uint32 fee;
     SequenceNumber seqNum;
     TimeBounds* timeBounds;
@@ -968,14 +968,14 @@ enum ClaimAtomType
 };
 
 // ClaimOfferAtomV0 is a ClaimOfferAtom with the AccountID discriminant stripped
-// off, leaving a raw ed25519 public key to identify the source account. This is
+// off, leaving a raw dilithium2 public key to identify the source account. This is
 // used for backwards compatibility starting from the protocol 17/18 boundary.
 // If an "old-style" ClaimOfferAtom is parsed with this XDR definition, it will
 // be parsed as a "new-style" ClaimAtom containing a ClaimOfferAtomV0.
 struct ClaimOfferAtomV0
 {
     // emitted to identify the offer
-    uint256 sellerEd25519; // Account that owns the offer
+    opaque sellerDilithium2[1312]; // Account that owns the offer
     int64 offerID;
 
     // amount and asset taken from the owner

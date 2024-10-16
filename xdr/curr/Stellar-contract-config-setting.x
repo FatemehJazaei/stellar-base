@@ -111,10 +111,10 @@ enum ContractCostType {
     ValDeser = 7,
     // Cost of computing the sha256 hash from bytes
     ComputeSha256Hash = 8,
-    // Cost of computing the ed25519 pubkey from bytes
-    ComputeEd25519PubKey = 9,
-    // Cost of verifying ed25519 signature of a payload.
-    VerifyEd25519Sig = 10,
+    // Cost of computing the dilithium2 pubkey from bytes
+    ComputeDilithium2PubKey = 9,
+    // Cost of verifying dilithium2 signature of a payload.
+    VerifyDilithium2Sig = 10,
     // Cost of instantiation a VM from wasm bytes code.
     VmInstantiation = 11,
     // Cost of instantiation a VM from a cached state.
