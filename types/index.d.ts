@@ -130,10 +130,10 @@ export class Claimant {
 
 export const FastSigning: boolean;
 
-export type KeypairType = 'ed25519';
+export type KeypairType = 'dilithium2';
 
 export class Keypair {
-  static fromRawEd25519Seed(secretSeed: Buffer): Keypair;
+  static fromRawDilithium2Seed(secretSeed: Buffer): Keypair;
   static fromSecret(secretKey: string): Keypair;
   static master(networkPassphrase: string): Keypair;
   static fromPublicKey(publicKey: string): Keypair;
@@ -276,8 +276,8 @@ export type TrustLineFlag =
   | TrustLineFlag.authorizeToMaintainLiabilities;
 
 export namespace Signer {
-  interface Ed25519PublicKey {
-    ed25519PublicKey: string;
+  interface Dilithium2PublicKey {
+    dilithium2PublicKey: string;
     weight: number | undefined;
   }
   interface Sha256Hash {
@@ -288,14 +288,14 @@ export namespace Signer {
     preAuthTx: Buffer;
     weight: number | undefined;
   }
-  interface Ed25519SignedPayload {
-    ed25519SignedPayload: string;
+  interface Dilithium2SignedPayload {
+    dilithium2SignedPayload: string;
     weight?: number | string;
   }
 }
 export namespace SignerKeyOptions {
-  interface Ed25519PublicKey {
-    ed25519PublicKey: string;
+  interface Dilithium2PublicKey {
+    dilithium2PublicKey: string;
   }
   interface Sha256Hash {
     sha256Hash: Buffer | string;
@@ -303,25 +303,25 @@ export namespace SignerKeyOptions {
   interface PreAuthTx {
     preAuthTx: Buffer | string;
   }
-  interface Ed25519SignedPayload {
-    ed25519SignedPayload: string;
+  interface Dilithium2SignedPayload {
+    dilithium2SignedPayload: string;
   }
 }
 export type Signer =
-  | Signer.Ed25519PublicKey
+  | Signer.Dilithium2PublicKey
   | Signer.Sha256Hash
   | Signer.PreAuthTx
-  | Signer.Ed25519SignedPayload;
+  | Signer.Dilithium2SignedPayload;
 
 export type SignerKeyOptions =
-  | SignerKeyOptions.Ed25519PublicKey
+  | SignerKeyOptions.Dilithium2PublicKey
   | SignerKeyOptions.Sha256Hash
   | SignerKeyOptions.PreAuthTx
-  | SignerKeyOptions.Ed25519SignedPayload;
+  | SignerKeyOptions.Dilithium2SignedPayload;
 
 export namespace SignerOptions {
-  interface Ed25519PublicKey {
-    ed25519PublicKey: string;
+  interface Dilithium2PublicKey {
+    dilithium2PublicKey: string;
     weight?: number | string;
   }
   interface Sha256Hash {
@@ -332,16 +332,16 @@ export namespace SignerOptions {
     preAuthTx: Buffer | string;
     weight?: number | string;
   }
-  interface Ed25519SignedPayload {
-    ed25519SignedPayload: string;
+  interface Dilithium2SignedPayload {
+    dilithium2SignedPayload: string;
     weight?: number | string;
   }
 }
 export type SignerOptions =
-  | SignerOptions.Ed25519PublicKey
+  | SignerOptions.Dilithium2PublicKey
   | SignerOptions.Sha256Hash
   | SignerOptions.PreAuthTx
-  | SignerOptions.Ed25519SignedPayload;
+  | SignerOptions.Dilithium2SignedPayload;
 
 export namespace OperationType {
   type CreateAccount = 'createAccount';
@@ -742,14 +742,14 @@ export namespace Operation {
     medThreshold?: number;
     highThreshold?: number;
     homeDomain?: string;
-    signer: T extends { ed25519PublicKey: any }
-      ? Signer.Ed25519PublicKey
+    signer: T extends { dilithium2PublicKey: any }
+      ? Signer.Dilithium2PublicKey
       : T extends { sha256Hash: any }
       ? Signer.Sha256Hash
       : T extends { preAuthTx: any }
       ? Signer.PreAuthTx
-      : T extends { ed25519SignedPayload: any }
-      ? Signer.Ed25519SignedPayload
+      : T extends { dilithium2SignedPayload: any }
+      ? Signer.Dilithium2SignedPayload
       : never;
   }
   function setOptions<T extends SignerOptions = never>(
@@ -964,17 +964,17 @@ export type Operation =
   | Operation.RestoreFootprint;
 
 export namespace StrKey {
-  function encodeEd25519PublicKey(data: Buffer): string;
-  function decodeEd25519PublicKey(address: string): Buffer;
-  function isValidEd25519PublicKey(Key: string): boolean;
+  function encodeDilithium2PublicKey(data: Buffer): string;
+  function decodeDilithium2PublicKey(address: string): Buffer;
+  function isValidDilithium2PublicKey(Key: string): boolean;
 
-  function encodeEd25519SecretSeed(data: Buffer): string;
-  function decodeEd25519SecretSeed(address: string): Buffer;
-  function isValidEd25519SecretSeed(seed: string): boolean;
+  function encodeDilithium2SecretSeed(data: Buffer): string;
+  function decodeDilithium2SecretSeed(address: string): Buffer;
+  function isValidDilithium2SecretSeed(seed: string): boolean;
 
-  function encodeMed25519PublicKey(data: Buffer): string;
-  function decodeMed25519PublicKey(address: string): Buffer;
-  function isValidMed25519PublicKey(publicKey: string): boolean;
+  function encodeMdilithium2PublicKey(data: Buffer): string;
+  function decodeMdilithium2PublicKey(address: string): Buffer;
+  function isValidMdilithium2PublicKey(publicKey: string): boolean;
 
   function encodeSignedPayload(data: Buffer): string;
   function decodeSignedPayload(address: string): Buffer;
