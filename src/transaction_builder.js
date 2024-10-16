@@ -185,9 +185,9 @@ export class TransactionBuilder {
 
     let source;
     // rebuild the source account based on the strkey
-    if (StrKey.isValidMed25519PublicKey(tx.source)) {
+    if (StrKey.isValidMdilithium2PublicKey(tx.source)) {
       source = MuxedAccount.fromAddress(tx.source, sequenceNum);
-    } else if (StrKey.isValidEd25519PublicKey(tx.source)) {
+    } else if (StrKey.isValidDilithium2PublicKey(tx.source)) {
       source = new Account(tx.source, sequenceNum);
     } else {
       throw new TypeError(`unsupported tx source account: ${tx.source}`);
@@ -744,8 +744,8 @@ export class TransactionBuilder {
     if (innerTxEnvelope.switch() === xdr.EnvelopeType.envelopeTypeTxV0()) {
       const v0Tx = innerTxEnvelope.v0().tx();
       const v1Tx = new xdr.Transaction({
-        sourceAccount: new xdr.MuxedAccount.keyTypeEd25519(
-          v0Tx.sourceAccountEd25519()
+        sourceAccount: new xdr.MuxedAccount.keyTypeDilithium2(
+          v0Tx.sourceAccountDilithium2()
         ),
         fee: v0Tx.fee(),
         seqNum: v0Tx.seqNum(),

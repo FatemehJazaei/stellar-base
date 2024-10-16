@@ -34,11 +34,11 @@ function weightCheckFunction(value, name) {
  * @param {number|string} [opts.medThreshold] - The sum weight for the medium threshold.
  * @param {number|string} [opts.highThreshold] - The sum weight for the high threshold.
  * @param {object} [opts.signer] - Add or remove a signer from the account. The signer is
- *                                 deleted if the weight is 0. Only one of `ed25519PublicKey`, `sha256Hash`, `preAuthTx` should be defined.
- * @param {string} [opts.signer.ed25519PublicKey] - The ed25519 public key of the signer.
+ *                                 deleted if the weight is 0. Only one of `dilithium2PublicKey`, `sha256Hash`, `preAuthTx` should be defined.
+ * @param {string} [opts.signer.dilithium2PublicKey] - The dilithium2 public key of the signer.
  * @param {Buffer|string} [opts.signer.sha256Hash] - sha256 hash (Buffer or hex string) of preimage that will unlock funds. Preimage should be used as signature of future transaction.
  * @param {Buffer|string} [opts.signer.preAuthTx] - Hash (Buffer or hex string) of transaction that will unlock funds.
- * @param {string} [opts.signer.ed25519SignedPayload] - Signed payload signer (ed25519 public key + raw payload) for atomic transaction signature disclosure.
+ * @param {string} [opts.signer.dilithium2SignedPayload] - Signed payload signer (dilithium2 public key + raw payload) for atomic transaction signature disclosure.
  * @param {number|string} [opts.signer.weight] - The weight of the new signer (0 to delete or 1-255)
  * @param {string} [opts.homeDomain] - sets the home domain used for reverse federation lookup.
  * @param {string} [opts.source] - The source account (defaults to transaction source).
@@ -50,7 +50,7 @@ export function setOptions(opts) {
   const attributes = {};
 
   if (opts.inflationDest) {
-    if (!StrKey.isValidEd25519PublicKey(opts.inflationDest)) {
+    if (!StrKey.isValidDilithium2PublicKey(opts.inflationDest)) {
       throw new Error('inflationDest is invalid');
     }
     attributes.inflationDest = Keypair.fromPublicKey(
@@ -99,16 +99,16 @@ export function setOptions(opts) {
 
     let setValues = 0;
 
-    if (opts.signer.ed25519PublicKey) {
-      if (!StrKey.isValidEd25519PublicKey(opts.signer.ed25519PublicKey)) {
-        throw new Error('signer.ed25519PublicKey is invalid.');
+    if (opts.signer.dilithium2PublicKey) {
+      if (!StrKey.isValidDilithium2PublicKey(opts.signer.dilithium2PublicKey)) {
+        throw new Error('signer.dilithium2PublicKey is invalid.');
       }
-      const rawKey = StrKey.decodeEd25519PublicKey(
-        opts.signer.ed25519PublicKey
+      const rawKey = StrKey.decodeDilithium2PublicKey(
+        opts.signer.dilithium2PublicKey
       );
 
       // eslint-disable-next-line new-cap
-      key = new xdr.SignerKey.signerKeyTypeEd25519(rawKey);
+      key = new xdr.SignerKey.signerKeyTypeDilithium2(rawKey);
       setValues += 1;
     }
 
@@ -150,24 +150,24 @@ export function setOptions(opts) {
       setValues += 1;
     }
 
-    if (opts.signer.ed25519SignedPayload) {
-      if (!StrKey.isValidSignedPayload(opts.signer.ed25519SignedPayload)) {
-        throw new Error('signer.ed25519SignedPayload is invalid.');
+    if (opts.signer.dilithium2SignedPayload) {
+      if (!StrKey.isValidSignedPayload(opts.signer.dilithium2SignedPayload)) {
+        throw new Error('signer.dilithium2SignedPayload is invalid.');
       }
       const rawKey = StrKey.decodeSignedPayload(
-        opts.signer.ed25519SignedPayload
+        opts.signer.dilithium2SignedPayload
       );
       const signedPayloadXdr =
-        xdr.SignerKeyEd25519SignedPayload.fromXDR(rawKey);
+        xdr.SignerKeyDilithium2SignedPayload.fromXDR(rawKey);
 
       // eslint-disable-next-line new-cap
-      key = xdr.SignerKey.signerKeyTypeEd25519SignedPayload(signedPayloadXdr);
+      key = xdr.SignerKey.signerKeyTypeDilithium2SignedPayload(signedPayloadXdr);
       setValues += 1;
     }
 
     if (setValues !== 1) {
       throw new Error(
-        'Signer object must contain exactly one of signer.ed25519PublicKey, signer.sha256Hash, signer.preAuthTx.'
+        'Signer object must contain exactly one of signer.dilithium2PublicKey, signer.sha256Hash, signer.preAuthTx.'
       );
     }
 

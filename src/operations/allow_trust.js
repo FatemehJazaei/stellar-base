@@ -20,7 +20,7 @@ import { StrKey } from '../strkey';
  * @returns {xdr.AllowTrustOp} Allow Trust operation
  */
 export function allowTrust(opts) {
-  if (!StrKey.isValidEd25519PublicKey(opts.trustor)) {
+  if (!StrKey.isValidDilithium2PublicKey(opts.trustor)) {
     throw new Error('trustor is invalid');
   }
   const attributes = {};

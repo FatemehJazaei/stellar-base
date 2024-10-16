@@ -4,23 +4,23 @@ import base32 from 'base32.js';
 import { verifyChecksum } from './util/checksum';
 
 const versionBytes = {
-  ed25519PublicKey: 6 << 3, // G (when encoded in base32)
-  ed25519SecretSeed: 18 << 3, // S
-  med25519PublicKey: 12 << 3, // M
-  preAuthTx: 19 << 3, // T
-  sha256Hash: 23 << 3, // X
-  signedPayload: 15 << 3, // P
-  contract: 2 << 3 // C
+  mdilithium2PublicKey: 12 << 3, // M    96
+  preAuthTx: 19 << 3, // T  = 152
+  sha256Hash: 23 << 3, // X = 184
+  signedPayload: 15 << 3, // P = 120
+  contract: 2 << 3, // C = 16
+  dilithium2PublicKey: 3 << 3, // D = 3 * 2^3 = 24
+  dilithium2SecretSeed: 4 << 3 // E = 4 * 2^3 = 32
 };
 
 const strkeyTypes = {
-  G: 'ed25519PublicKey',
-  S: 'ed25519SecretSeed',
-  M: 'med25519PublicKey',
+  M: 'mdilithium2PublicKey',
   T: 'preAuthTx',
   X: 'sha256Hash',
   P: 'signedPayload',
-  C: 'contract'
+  C: 'contract',
+  D: 'dilithium2PublicKey',
+  E: 'dilithium2SecretSeed'
 };
 
 /**
@@ -29,90 +29,93 @@ const strkeyTypes = {
  * string (i.e. "GABCD...", etc.) representations.
  */
 export class StrKey {
-  /**
-   * Encodes `data` to strkey ed25519 public key.
+ 
+// Dilithium2 
+
+/**
+   * Encodes `data` to strkey dilithium2 public key.
    *
    * @param   {Buffer} data   raw data to encode
-   * @returns {string}        "G..." representation of the key
+   * @returns {string}        "D..." representation of the key
    */
-  static encodeEd25519PublicKey(data) {
-    return encodeCheck('ed25519PublicKey', data);
-  }
+static encodeDilithium2PublicKey(data) {
+  return encodeCheck('dilithium2PublicKey', data);
+}
 
-  /**
-   * Decodes strkey ed25519 public key to raw data.
-   *
-   * If the parameter is a muxed account key ("M..."), this will only encode it
-   * as a basic Ed25519 key (as if in "G..." format).
-   *
-   * @param   {string} data   "G..." (or "M...") key representation to decode
-   * @returns {Buffer}        raw key
-   */
-  static decodeEd25519PublicKey(data) {
-    return decodeCheck('ed25519PublicKey', data);
-  }
+/**
+ * Decodes strkey dilithium2 public key to raw data.
+ *
+ * If the parameter is a muxed account key ("M..."), this will only encode it
+ * as a basic dilithium2 key (as if in "D..." format).
+ *
+ * @param   {string} data   "D..." (or "M...") key representation to decode
+ * @returns {Buffer}        raw key
+ */
+static decodeDilithium2PublicKey(data) {
+  return decodeCheck('dilithium2PublicKey', data);
+}
 
-  /**
-   * Returns true if the given Stellar public key is a valid ed25519 public key.
-   * @param {string} publicKey public key to check
-   * @returns {boolean}
-   */
-  static isValidEd25519PublicKey(publicKey) {
-    return isValid('ed25519PublicKey', publicKey);
-  }
-
-  /**
-   * Encodes data to strkey ed25519 seed.
+/**
+ * Returns true if the given Stellar public key is a valid dilithium2 public key.
+ * @param {string} publicKey public key to check
+ * @returns {boolean}
+ */
+static isValidDilithium2PublicKey(publicKey) {
+  return isValid('dilithium2PublicKey', publicKey);
+}
+/**
+   * Encodes data to strkey dilithium2 seed.
    * @param {Buffer} data data to encode
    * @returns {string}
    */
-  static encodeEd25519SecretSeed(data) {
-    return encodeCheck('ed25519SecretSeed', data);
-  }
+static encodeDilithium2SecretSeed(data) {
+  return encodeCheck('dilithium2SecretSeed', data);
+}
+
+/**
+ * Decodes strkey dilithium2 seed to raw data.
+ * @param {string} address data to decode
+ * @returns {Buffer}
+ */
+static decodeDilithium2SecretSeed(address) {
+  return decodeCheck('dilithium2SecretSeed', address);
+}
+
+/**
+ * Returns true if the given Stellar secret key is a valid dilithium2 secret seed.
+ * @param {string} seed seed to check
+ * @returns {boolean}
+ */
+static isValidDilithium2SecretSeed(seed) {
+  return isValid('dilithium2SecretSeed', seed);
+}
+
 
   /**
-   * Decodes strkey ed25519 seed to raw data.
-   * @param {string} address data to decode
-   * @returns {Buffer}
-   */
-  static decodeEd25519SecretSeed(address) {
-    return decodeCheck('ed25519SecretSeed', address);
-  }
-
-  /**
-   * Returns true if the given Stellar secret key is a valid ed25519 secret seed.
-   * @param {string} seed seed to check
-   * @returns {boolean}
-   */
-  static isValidEd25519SecretSeed(seed) {
-    return isValid('ed25519SecretSeed', seed);
-  }
-
-  /**
-   * Encodes data to strkey med25519 public key.
+   * Encodes data to strkey mdilithium2 public key.
    * @param {Buffer} data data to encode
    * @returns {string}
    */
-  static encodeMed25519PublicKey(data) {
-    return encodeCheck('med25519PublicKey', data);
+  static encodeMdilithium2PublicKey(data) {
+    return encodeCheck('mdilithium2PublicKey', data);
   }
 
   /**
-   * Decodes strkey med25519 public key to raw data.
+   * Decodes strkey mdilithium2 public key to raw data.
    * @param {string} address data to decode
    * @returns {Buffer}
    */
-  static decodeMed25519PublicKey(address) {
-    return decodeCheck('med25519PublicKey', address);
+  static decodeMdilithium2PublicKey(address) {
+    return decodeCheck('mdilithium2PublicKey', address);
   }
 
   /**
-   * Returns true if the given Stellar public key is a valid med25519 public key.
+   * Returns true if the given Stellar public key is a valid mdilithium2 public key.
    * @param {string} publicKey public key to check
    * @returns {boolean}
    */
-  static isValidMed25519PublicKey(publicKey) {
-    return isValid('med25519PublicKey', publicKey);
+  static isValidMdilithium2PublicKey(publicKey) {
+    return isValid('mdilithium2PublicKey', publicKey);
   }
 
   /**
@@ -230,24 +233,36 @@ function isValid(versionByteName, encoded) {
 
   // basic length checks on the strkey lengths
   switch (versionByteName) {
-    case 'ed25519PublicKey': // falls through
-    case 'ed25519SecretSeed': // falls through
     case 'preAuthTx': // falls through
     case 'sha256Hash': // falls through
     case 'contract':
-      if (encoded.length !== 56) {
+      if (encoded.length !== 2104) {
         return false;
       }
       break;
 
-    case 'med25519PublicKey':
-      if (encoded.length !== 69) {
+    // Base32 5 byte = 8 charecter  so (1312 + 2 + 1) * 8 / 5 = 2104  
+    case 'dilithium2PublicKey': // falls through
+      if (encoded.length !== 2104) {
+        return false;
+      }
+      break;
+
+    // Base32 5 byte = 8 charecter  so (32+1+2) * 8 / 5 = 56 
+    case 'dilithium2SecretSeed': // falls through
+    if (encoded.length !== 56 ) {
+      return false;
+    }
+    break;
+    // 1312 + 8 = 1320  => (1320+3)*8/5=2117
+    case 'medilithium2PublicKey':
+      if (encoded.length !== 2117) {
         return false;
       }
       break;
 
     case 'signedPayload':
-      if (encoded.length < 56 || encoded.length > 165) {
+      if (encoded.length < 2117 || encoded.length > 5983) {
         return false;
       }
       break;
@@ -265,21 +280,27 @@ function isValid(versionByteName, encoded) {
 
   // basic length checks on the resulting buffer sizes
   switch (versionByteName) {
-    case 'ed25519PublicKey': // falls through
-    case 'ed25519SecretSeed': // falls through
     case 'preAuthTx': // falls through
     case 'sha256Hash': // falls through
     case 'contract':
+      return decoded.length === 1312;
+
+    // Dilithium2  PublicKey = 1312 byte  
+    case 'dilithium2PublicKey': // falls through
+      return decoded.length === 1312;
+
+    // Dilithium2  SecretSeed = 32 byte  
+    case 'dilithium2SecretSeed': // falls through
       return decoded.length === 32;
 
-    case 'med25519PublicKey':
-      return decoded.length === 40; // +8 bytes for the ID
+    case 'mdilithium2PublicKey':
+      return decoded.length === 1320; // +8 bytes for the ID
 
     case 'signedPayload':
       return (
         // 32 for the signer, +4 for the payload size, then either +4 for the
         // min or +64 for the max payload
-        decoded.length >= 32 + 4 + 4 && decoded.length <= 32 + 4 + 64
+        decoded.length >= 1312 + 4 + 4 && decoded.length <= 1312 + 4 + 2420
       );
 
     default:
@@ -345,7 +366,6 @@ export function encodeCheck(versionByteName, data) {
   const payload = Buffer.concat([versionBuffer, data]);
   const checksum = Buffer.from(calculateChecksum(payload));
   const unencoded = Buffer.concat([payload, checksum]);
-
   return base32.encode(unencoded);
 }
 

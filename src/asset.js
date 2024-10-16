@@ -25,7 +25,7 @@ export class Asset {
     if (String(code).toLowerCase() !== 'xlm' && !issuer) {
       throw new Error('Issuer cannot be null');
     }
-    if (issuer && !StrKey.isValidEd25519PublicKey(issuer)) {
+    if (issuer && !StrKey.isValidDilithium2PublicKey(issuer)) {
       throw new Error('Issuer is invalid');
     }
 
@@ -64,7 +64,7 @@ export class Asset {
       /* falls through */
       case xdr.AssetType.assetTypeCreditAlphanum12():
         anum = anum || assetXdr.alphaNum12();
-        issuer = StrKey.encodeEd25519PublicKey(anum.issuer().ed25519());
+        issuer = StrKey.encodeDilithium2PublicKey(anum.issuer().dilithium2());
         code = trimEnd(anum.assetCode(), '\0');
         return new this(code, issuer);
       default:

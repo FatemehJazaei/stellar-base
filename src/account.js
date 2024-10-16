@@ -21,11 +21,11 @@ import { StrKey } from './strkey';
  */
 export class Account {
   constructor(accountId, sequence) {
-    if (StrKey.isValidMed25519PublicKey(accountId)) {
+    if (StrKey.isValidMdilithium2PublicKey(accountId)) {
       throw new Error('accountId is an M-address; use MuxedAccount instead');
     }
 
-    if (!StrKey.isValidEd25519PublicKey(accountId)) {
+    if (!StrKey.isValidDilithium2PublicKey(accountId)) {
       throw new Error('accountId is invalid');
     }
     if (!(typeof sequence === 'string')) {
@@ -37,8 +37,7 @@ export class Account {
   }
 
   /**
-   * Returns Stellar account ID, ex.
-   * `GB3KJPLFUYN5VL6R3GU3EGCGVCKFDSD7BEDX42HWG5BWFKB3KQGJJRMA`.
+   * Returns Stellar account ID.
    * @returns {string}
    */
   accountId() {

@@ -13,7 +13,7 @@ import { StrKey } from './strkey';
  */
 export class Claimant {
   constructor(destination, predicate) {
-    if (destination && !StrKey.isValidEd25519PublicKey(destination)) {
+    if (destination && !StrKey.isValidDilithium2PublicKey(destination)) {
       throw new Error('Destination is invalid');
     }
     this._destination = destination;
@@ -125,7 +125,7 @@ export class Claimant {
       case xdr.ClaimantType.claimantTypeV0():
         value = claimantXdr.v0();
         return new this(
-          StrKey.encodeEd25519PublicKey(value.destination().ed25519()),
+          StrKey.encodeDilithium2PublicKey(value.destination().dilithium2()),
           value.predicate()
         );
       default:

@@ -21,7 +21,7 @@ import { LiquidityPoolId } from '../liquidity_pool_id';
  *
  */
 export function revokeAccountSponsorship(opts = {}) {
-  if (!StrKey.isValidEd25519PublicKey(opts.account)) {
+  if (!StrKey.isValidDilithium2PublicKey(opts.account)) {
     throw new Error('account is invalid');
   }
 
@@ -60,7 +60,7 @@ export function revokeAccountSponsorship(opts = {}) {
  *
  */
 export function revokeTrustlineSponsorship(opts = {}) {
-  if (!StrKey.isValidEd25519PublicKey(opts.account)) {
+  if (!StrKey.isValidDilithium2PublicKey(opts.account)) {
     throw new Error('account is invalid');
   }
 
@@ -106,7 +106,7 @@ export function revokeTrustlineSponsorship(opts = {}) {
  *
  */
 export function revokeOfferSponsorship(opts = {}) {
-  if (!StrKey.isValidEd25519PublicKey(opts.seller)) {
+  if (!StrKey.isValidDilithium2PublicKey(opts.seller)) {
     throw new Error('seller is invalid');
   }
   if (typeof opts.offerId !== 'string') {
@@ -146,7 +146,7 @@ export function revokeOfferSponsorship(opts = {}) {
  *
  */
 export function revokeDataSponsorship(opts = {}) {
-  if (!StrKey.isValidEd25519PublicKey(opts.account)) {
+  if (!StrKey.isValidDilithium2PublicKey(opts.account)) {
     throw new Error('account is invalid');
   }
   if (typeof opts.name !== 'string' || opts.name.length > 64) {
@@ -245,7 +245,7 @@ export function revokeLiquidityPoolSponsorship(opts = {}) {
  * @param {object} opts Options object
  * @param {string} opts.account - The account ID where the signer sponsorship is being removed from.
  * @param {object} opts.signer - The signer whose sponsorship is being removed.
- * @param {string} [opts.signer.ed25519PublicKey] - The ed25519 public key of the signer.
+ * @param {string} [opts.signer.dilithium2PublicKey] - The dilithium2 public key of the signer.
  * @param {Buffer|string} [opts.signer.sha256Hash] - sha256 hash (Buffer or hex string).
  * @param {Buffer|string} [opts.signer.preAuthTx] - Hash (Buffer or hex string) of transaction.
  * @param {string} [opts.source] - The source account for the operation. Defaults to the transaction's source account.
@@ -255,23 +255,23 @@ export function revokeLiquidityPoolSponsorship(opts = {}) {
  * const op = Operation.revokeSignerSponsorship({
  *   account: 'GDGU5OAPHNPU5UCLE5RDJHG7PXZFQYWKCFOEXSXNMR6KRQRI5T6XXCD7
  *   signer: {
- *     ed25519PublicKey: 'GCEZWKCA5VLDNRLN3RPRJMRZOX3Z6G5CHCGSNFHEYVXM3XOJMDS674JZ'
+ *     dilithium2PublicKey: 'GCEZWKCA5VLDNRLN3RPRJMRZOX3Z6G5CHCGSNFHEYVXM3XOJMDS674JZ'
  *   }
  * })
  *
  */
 export function revokeSignerSponsorship(opts = {}) {
-  if (!StrKey.isValidEd25519PublicKey(opts.account)) {
+  if (!StrKey.isValidDilithium2PublicKey(opts.account)) {
     throw new Error('account is invalid');
   }
   let key;
-  if (opts.signer.ed25519PublicKey) {
-    if (!StrKey.isValidEd25519PublicKey(opts.signer.ed25519PublicKey)) {
-      throw new Error('signer.ed25519PublicKey is invalid.');
+  if (opts.signer.dilithium2PublicKey) {
+    if (!StrKey.isValidDilithium2PublicKey(opts.signer.dilithium2PublicKey)) {
+      throw new Error('signer.dilithium2PublicKey is invalid.');
     }
-    const rawKey = StrKey.decodeEd25519PublicKey(opts.signer.ed25519PublicKey);
+    const rawKey = StrKey.decodeDilithium2PublicKey(opts.signer.dilithium2PublicKey);
 
-    key = new xdr.SignerKey.signerKeyTypeEd25519(rawKey);
+    key = new xdr.SignerKey.signerKeyTypeDilithium2(rawKey);
   } else if (opts.signer.preAuthTx) {
     let buffer;
     if (typeof opts.signer.preAuthTx === 'string') {

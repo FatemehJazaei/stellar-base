@@ -61,8 +61,8 @@ export class Transaction extends TransactionBase {
 
     switch (this._envelopeType) {
       case xdr.EnvelopeType.envelopeTypeTxV0():
-        this._source = StrKey.encodeEd25519PublicKey(
-          this.tx.sourceAccountEd25519()
+        this._source = StrKey.encodeDilithium2PublicKey(
+          this.tx.sourceAccountDilithium2()
         );
         break;
       default:
@@ -265,7 +265,7 @@ export class Transaction extends TransactionBase {
           // TransactionV0 is a transaction with the AccountID discriminant
           // stripped off, we need to put it back to build a valid transaction
           // which we can use to build a TransactionSignaturePayloadTaggedTransaction
-          xdr.PublicKeyType.publicKeyTypeEd25519().toXDR(),
+          xdr.PublicKeyType.publicKeyTypeDilithium2().toXDR(),
           tx.toXDR()
         ])
       );
@@ -350,12 +350,12 @@ export class Transaction extends TransactionBase {
     }
 
     // Always use the transaction's *unmuxed* source.
-    const account = StrKey.decodeEd25519PublicKey(
+    const account = StrKey.decodeDilithium2PublicKey(
       extractBaseAddress(this.source)
     );
     const operationId = xdr.HashIdPreimage.envelopeTypeOpId(
       new xdr.HashIdPreimageOperationId({
-        sourceAccount: xdr.AccountId.publicKeyTypeEd25519(account),
+        sourceAccount: xdr.AccountId.publicKeyTypeDilithium2(account),
         seqNum: xdr.SequenceNumber.fromString(this.sequence),
         opNum: opIndex
       })

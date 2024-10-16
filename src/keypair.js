@@ -5,13 +5,11 @@ import nacl from 'tweetnacl';
 import { sign, verify, generate } from './signing';
 import { StrKey } from './strkey';
 import { hash } from './hashing';
-
 import xdr from './xdr';
-
 /**
  * `Keypair` represents public (and secret) keys of the account.
  *
- * Currently `Keypair` only supports ed25519 but in a future this class can be abstraction layer for other
+ * Currently `Keypair` only supports dilithium2 but in a future this class can be abstraction layer for other
  * public-key signature systems.
  *
  * Use more convenient methods to create `Keypair` object:
@@ -21,13 +19,13 @@ import xdr from './xdr';
  *
  * @constructor
  * @param {object} keys At least one of keys must be provided.
- * @param {string} keys.type Public-key signature system name. (currently only `ed25519` keys are supported)
- * @param {Buffer} [keys.publicKey] Raw public key
- * @param {Buffer} [keys.secretKey] Raw secret key (32-byte secret seed in ed25519`)
+ * @param {string} keys.type Public-key signature system name. (currently only `dilithium2` keys are supported)
+ * @param {Buffer} [keys.publicKey] Raw public key 1312-byte
+ * @param {Buffer} [keys.secretKey] Raw secret key (32-byte secret seed in dilithium2`)
  */
 export class Keypair {
   constructor(keys) {
-    if (keys.type !== 'ed25519') {
+    if (keys.type !== 'dilithium2') {
       throw new Error('Invalid keys type');
     }
 
@@ -53,7 +51,7 @@ export class Keypair {
     } else {
       this._publicKey = Buffer.from(keys.publicKey);
 
-      if (this._publicKey.length !== 32) {
+      if (this._publicKey.length !== 1312) {
         throw new Error('publicKey length is invalid');
       }
     }
@@ -61,23 +59,23 @@ export class Keypair {
 
   /**
    * Creates a new `Keypair` instance from secret. This can either be secret key or secret seed depending
-   * on underlying public-key signature system. Currently `Keypair` only supports ed25519.
-   * @param {string} secret secret key (ex. `SDAKFNYEIAORZKKCYRILFQKLLOCNPL5SWJ3YY5NM3ZH6GJSZGXHZEPQS`)
+   * on underlying public-key signature system. Currently `Keypair` only supports dilithium2.
+   * @param {string} secret secret key 
    * @returns {Keypair}
    */
   static fromSecret(secret) {
-    const rawSecret = StrKey.decodeEd25519SecretSeed(secret);
-    return this.fromRawEd25519Seed(rawSecret);
+    const rawSecret = StrKey.decodeDilithium2SecretSeed(secret);
+    return this.fromRawDilithium2Seed(rawSecret);
   }
 
   /**
-   * Creates a new `Keypair` object from ed25519 secret key seed raw bytes.
+   * Creates a new `Keypair` object from dilithium2 secret key seed raw bytes.
    *
-   * @param {Buffer} rawSeed Raw 32-byte ed25519 secret key seed
+   * @param {Buffer} rawSeed Raw 32-byte dilithium2 secret key seed
    * @returns {Keypair}
    */
-  static fromRawEd25519Seed(rawSeed) {
-    return new this({ type: 'ed25519', secretKey: rawSeed });
+  static fromRawDilithium2Seed(rawSeed) {
+    return new this({ type: 'dilithium2', secretKey: rawSeed });
   }
 
   /**
@@ -92,20 +90,20 @@ export class Keypair {
       );
     }
 
-    return this.fromRawEd25519Seed(hash(networkPassphrase));
+    return this.fromRawDilithium2Seed(hash(networkPassphrase));
   }
 
   /**
    * Creates a new `Keypair` object from public key.
-   * @param {string} publicKey public key (ex. `GB3KJPLFUYN5VL6R3GU3EGCGVCKFDSD7BEDX42HWG5BWFKB3KQGJJRMA`)
+   * @param {string} publicKey public key 
    * @returns {Keypair}
    */
   static fromPublicKey(publicKey) {
-    publicKey = StrKey.decodeEd25519PublicKey(publicKey);
-    if (publicKey.length !== 32) {
+    publicKey = StrKey.decodeDilithium2PublicKey(publicKey);
+    if (publicKey.length !== 1312) {
       throw new Error('Invalid Stellar public key');
     }
-    return new this({ type: 'ed25519', publicKey });
+    return new this({ type: 'dilithium2', publicKey });
   }
 
   /**
@@ -114,15 +112,15 @@ export class Keypair {
    */
   static random() {
     const secret = nacl.randomBytes(32);
-    return this.fromRawEd25519Seed(secret);
+    return this.fromRawDilithium2Seed(secret);
   }
 
   xdrAccountId() {
-    return new xdr.AccountId.publicKeyTypeEd25519(this._publicKey);
+    return new xdr.AccountId.publicKeyTypeDilithium2(this._publicKey);
   }
 
   xdrPublicKey() {
-    return new xdr.PublicKey.publicKeyTypeEd25519(this._publicKey);
+    return new xdr.PublicKey.publicKeyTypeDilithium2(this._publicKey);
   }
 
   /**
@@ -142,15 +140,15 @@ export class Keypair {
         throw new TypeError(`expected string for ID, got ${typeof id}`);
       }
 
-      return xdr.MuxedAccount.keyTypeMuxedEd25519(
-        new xdr.MuxedAccountMed25519({
+      return xdr.MuxedAccount.keyTypeMuxedDilithium2(
+        new xdr.MuxedAccountMdilithium2({
           id: xdr.Uint64.fromString(id),
-          ed25519: this._publicKey
+          dilithium2: this._publicKey
         })
       );
     }
 
-    return new xdr.MuxedAccount.keyTypeEd25519(this._publicKey);
+    return new xdr.MuxedAccount.keyTypeDilithium2(this._publicKey);
   }
 
   /**
@@ -172,7 +170,7 @@ export class Keypair {
    * @returns {string}
    */
   publicKey() {
-    return StrKey.encodeEd25519PublicKey(this._publicKey);
+    return StrKey.encodeDilithium2PublicKey(this._publicKey);
   }
 
   /**
@@ -184,8 +182,8 @@ export class Keypair {
       throw new Error('no secret key available');
     }
 
-    if (this.type === 'ed25519') {
-      return StrKey.encodeEd25519SecretSeed(this._secretSeed);
+    if (this.type === 'dilithium2') {
+      return StrKey.encodeDilithium2SecretSeed(this._secretSeed);
     }
 
     throw new Error('Invalid Keypair type');

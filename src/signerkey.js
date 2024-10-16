@@ -14,7 +14,7 @@ export class SignerKey {
   /**
    * Decodes a StrKey address into an xdr.SignerKey instance.
    *
-   * Only ED25519 public keys (G...), pre-auth transactions (T...), hashes
+   * Only dilithium2 public keys (G...), pre-auth transactions (T...), hashes
    * (H...), and signed payloads (P...) can be signer keys.
    *
    * @param   {string} address  a StrKey-encoded signer address
@@ -22,10 +22,10 @@ export class SignerKey {
    */
   static decodeAddress(address) {
     const signerKeyMap = {
-      ed25519PublicKey: xdr.SignerKey.signerKeyTypeEd25519,
+      dilithium2PublicKey: xdr.SignerKey.signerKeyTypeDilithium2,
       preAuthTx: xdr.SignerKey.signerKeyTypePreAuthTx,
       sha256Hash: xdr.SignerKey.signerKeyTypeHashX,
-      signedPayload: xdr.SignerKey.signerKeyTypeEd25519SignedPayload
+      signedPayload: xdr.SignerKey.signerKeyTypeDilithium2SignedPayload
     };
 
     const vb = StrKey.getVersionByteForPrefix(address);
@@ -38,13 +38,13 @@ export class SignerKey {
     switch (vb) {
       case 'signedPayload':
         return encoder(
-          new xdr.SignerKeyEd25519SignedPayload({
-            ed25519: raw.slice(0, 32),
-            payload: raw.slice(32 + 4)
+          new xdr.SignerKeyDilithium2SignedPayload({
+            dilithium2: raw.slice(0, 1312),
+            payload: raw.slice(1312 + 4)
           })
         );
 
-      case 'ed25519PublicKey': // falls through
+      case 'dilithium2PublicKey': // falls through
       case 'preAuthTx': // falls through
       case 'sha256Hash': // falls through
       default:
@@ -63,8 +63,9 @@ export class SignerKey {
     let raw;
 
     switch (signerKey.switch()) {
-      case xdr.SignerKeyType.signerKeyTypeEd25519():
-        strkeyType = 'ed25519PublicKey';
+
+      case xdr.SignerKeyType.signerKeyTypeDilithium2():
+        strkeyType = 'dilithium2PublicKey';
         raw = signerKey.value();
         break;
 
@@ -78,9 +79,9 @@ export class SignerKey {
         raw = signerKey.value();
         break;
 
-      case xdr.SignerKeyType.signerKeyTypeEd25519SignedPayload():
+      case xdr.SignerKeyType.signerKeyTypeDilithium2SignedPayload():
         strkeyType = 'signedPayload';
-        raw = signerKey.ed25519SignedPayload().toXDR('raw');
+        raw = signerKey.dilithium2SignedPayload().toXDR('raw');
         break;
 
       default:

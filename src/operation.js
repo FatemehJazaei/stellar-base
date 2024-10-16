@@ -214,15 +214,15 @@ export class Operation {
         if (attrs.signer()) {
           const signer = {};
           const arm = attrs.signer().key().arm();
-          if (arm === 'ed25519') {
-            signer.ed25519PublicKey = accountIdtoAddress(attrs.signer().key());
+          if (arm === 'dilithium2') {
+            signer.dilithium2PublicKey = accountIdtoAddress(attrs.signer().key());
           } else if (arm === 'preAuthTx') {
             signer.preAuthTx = attrs.signer().key().preAuthTx();
           } else if (arm === 'hashX') {
             signer.sha256Hash = attrs.signer().key().hashX();
-          } else if (arm === 'ed25519SignedPayload') {
-            const signedPayload = attrs.signer().key().ed25519SignedPayload();
-            signer.ed25519SignedPayload = StrKey.encodeSignedPayload(
+          } else if (arm === 'dilithium2SignedPayload') {
+            const signedPayload = attrs.signer().key().dilithium2SignedPayload();
+            signer.dilithium2SignedPayload = StrKey.encodeSignedPayload(
               signedPayload.toXDR()
             );
           }
@@ -613,9 +613,9 @@ function extractRevokeSponshipDetails(attrs, result) {
 function convertXDRSignerKeyToObject(signerKey) {
   const attrs = {};
   switch (signerKey.switch().name) {
-    case xdr.SignerKeyType.signerKeyTypeEd25519().name: {
-      attrs.ed25519PublicKey = StrKey.encodeEd25519PublicKey(
-        signerKey.ed25519()
+    case xdr.SignerKeyType.signerKeyTypeDilithium2().name: {
+      attrs.dilithium2PublicKey = StrKey.encodeDilithium2PublicKey(
+        signerKey.dilithium2()
       );
       break;
     }
@@ -636,7 +636,7 @@ function convertXDRSignerKeyToObject(signerKey) {
 }
 
 function accountIdtoAddress(accountId) {
-  return StrKey.encodeEd25519PublicKey(accountId.ed25519());
+  return StrKey.encodeDilithium2PublicKey(accountId.dilithium2());
 }
 
 // Attach all imported operations as static methods on the Operation class

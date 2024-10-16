@@ -16,9 +16,9 @@ import xdr from './xdr';
  */
 export class Address {
   constructor(address) {
-    if (StrKey.isValidEd25519PublicKey(address)) {
+    if (StrKey.isValidDilithium2PublicKey(address)) {
       this._type = 'account';
-      this._key = StrKey.decodeEd25519PublicKey(address);
+      this._key = StrKey.decodeDilithium2PublicKey(address);
     } else if (StrKey.isValidContract(address)) {
       this._type = 'contract';
       this._key = StrKey.decodeContract(address);
@@ -44,7 +44,7 @@ export class Address {
    * @returns {Address}
    */
   static account(buffer) {
-    return new Address(StrKey.encodeEd25519PublicKey(buffer));
+    return new Address(StrKey.encodeDilithium2PublicKey(buffer));
   }
 
   /**
@@ -76,7 +76,7 @@ export class Address {
   static fromScAddress(scAddress) {
     switch (scAddress.switch()) {
       case xdr.ScAddressType.scAddressTypeAccount():
-        return Address.account(scAddress.accountId().ed25519());
+        return Address.account(scAddress.accountId().dilithium2());
       case xdr.ScAddressType.scAddressTypeContract():
         return Address.contract(scAddress.contractId());
       default:
@@ -92,7 +92,7 @@ export class Address {
   toString() {
     switch (this._type) {
       case 'account':
-        return StrKey.encodeEd25519PublicKey(this._key);
+        return StrKey.encodeDilithium2PublicKey(this._key);
       case 'contract':
         return StrKey.encodeContract(this._key);
       default:
@@ -118,7 +118,7 @@ export class Address {
     switch (this._type) {
       case 'account':
         return xdr.ScAddress.scAddressTypeAccount(
-          xdr.PublicKey.publicKeyTypeEd25519(this._key)
+          xdr.PublicKey.publicKeyTypeDilithium2(this._key)
         );
       case 'contract':
         return xdr.ScAddress.scAddressTypeContract(this._key);

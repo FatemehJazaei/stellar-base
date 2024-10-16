@@ -155,7 +155,7 @@ export async function authorizeEntry(
   // to be symbols, hence the forced typing here.
   const sigScVal = nativeToScVal(
     {
-      public_key: StrKey.decodeEd25519PublicKey(publicKey),
+      public_key: StrKey.decodeDilithium2PublicKey(publicKey),
       signature
     },
     {

@@ -18,7 +18,7 @@ import { Keypair } from '../keypair';
  *
  */
 export function beginSponsoringFutureReserves(opts = {}) {
-  if (!StrKey.isValidEd25519PublicKey(opts.sponsoredId)) {
+  if (!StrKey.isValidDilithium2PublicKey(opts.sponsoredId)) {
     throw new Error('sponsoredId is invalid');
   }
   const op = new xdr.BeginSponsoringFutureReservesOp({

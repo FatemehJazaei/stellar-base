@@ -48,7 +48,7 @@ import {
 export class MuxedAccount {
   constructor(baseAccount, id) {
     const accountId = baseAccount.accountId();
-    if (!StrKey.isValidEd25519PublicKey(accountId)) {
+    if (!StrKey.isValidDilithium2PublicKey(accountId)) {
       throw new Error('accountId is invalid');
     }
 
@@ -72,7 +72,7 @@ export class MuxedAccount {
   static fromAddress(mAddress, sequenceNum) {
     const muxedAccount = decodeAddressToMuxedAccount(mAddress);
     const gAddress = extractBaseAddress(mAddress);
-    const id = muxedAccount.med25519().id().toString();
+    const id = muxedAccount.mdilithium2().id().toString();
 
     return new MuxedAccount(new Account(gAddress, sequenceNum), id);
   }
@@ -101,7 +101,7 @@ export class MuxedAccount {
       throw new Error('id should be a string representing a number (uint64)');
     }
 
-    this._muxedXdr.med25519().id(xdr.Uint64.fromString(id));
+    this._muxedXdr.mdilithium2().id(xdr.Uint64.fromString(id));
     this._mAddress = encodeMuxedAccountToAddress(this._muxedXdr);
     this._id = id;
     return this;

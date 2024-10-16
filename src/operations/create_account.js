@@ -14,7 +14,7 @@ import { StrKey } from '../strkey';
  * @returns {xdr.CreateAccountOp} Create account operation
  */
 export function createAccount(opts) {
-  if (!StrKey.isValidEd25519PublicKey(opts.destination)) {
+  if (!StrKey.isValidDilithium2PublicKey(opts.destination)) {
     throw new Error('destination is invalid');
   }
   if (!this.isValidAmount(opts.startingBalance, true)) {
