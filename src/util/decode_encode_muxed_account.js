@@ -45,9 +45,9 @@ export function encodeMuxedAccountToAddress(muxedAccount) {
 }
 
 /**
- * Transform a Stellar address (G...) and an ID into its XDR representation.
+ * Transform a Stellar address (D...) and an ID into its XDR representation.
  *
- * @param  {string} address   - a Stellar G... address
+ * @param  {string} address   - a Stellar D... address
  * @param  {string} id        - a Uint64 ID represented as a string
  *
  * @return {xdr.MuxedAccount} - XDR representation of the above muxed account
@@ -69,9 +69,9 @@ export function encodeMuxedAccount(address, id) {
 }
 
 /**
- * Extracts the underlying base (G...) address from an M-address.
- * @param  {string} address   an account address (either M... or G...)
- * @return {string} a Stellar public key address (G...)
+ * Extracts the underlying base (D...) address from an M-address.
+ * @param  {string} address   an account address (either M... or DS...)
+ * @return {string} a Stellar public key address (D...)
  */
 export function extractBaseAddress(address) {
   if (StrKey.isValidDilithium2PublicKey(address)) {

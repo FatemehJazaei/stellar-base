@@ -9,8 +9,7 @@ import xdr from './xdr';
  *
  * @constructor
  *
- * @param {string} address - ID of the account (ex.
- *     `GB3KJPLFUYN5VL6R3GU3EGCGVCKFDSD7BEDX42HWG5BWFKB3KQGJJRMA`). If you
+ * @param {string} address - ID of the account, If you
  *     provide a muxed account address, this will throw; use {@link
  *     MuxedAccount} instead.
  */

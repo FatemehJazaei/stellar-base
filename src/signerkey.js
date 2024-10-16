@@ -14,7 +14,7 @@ export class SignerKey {
   /**
    * Decodes a StrKey address into an xdr.SignerKey instance.
    *
-   * Only dilithium2 public keys (G...), pre-auth transactions (T...), hashes
+   * Only dilithium2 public keys (D...), pre-auth transactions (T...), hashes
    * (H...), and signed payloads (P...) can be signer keys.
    *
    * @param   {string} address  a StrKey-encoded signer address
