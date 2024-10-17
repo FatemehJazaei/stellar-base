@@ -1,4 +1,48 @@
-declare namespace xdr {
+// Automatically generated on 2024-10-17 10:48:00-08:00
+import { Operation } from './index';
+
+export {};
+
+// Hidden namespace as hack to work around name collision.
+declare namespace xdrHidden {
+  // tslint:disable-line:strict-export-declare-modifiers
+  class Operation2<T extends Operation = Operation> {
+    constructor(attributes: {
+      sourceAccount: null | xdr.MuxedAccount;
+      body: xdr.OperationBody;
+    });
+
+    sourceAccount(value?: null | xdr.MuxedAccount): null | xdr.MuxedAccount;
+
+    body(value?: xdr.OperationBody): xdr.OperationBody;
+
+    toXDR(format?: 'raw'): Buffer;
+
+    toXDR(format: 'hex' | 'base64'): string;
+
+    static read(io: Buffer): xdr.Operation;
+
+    static write(value: xdr.Operation, io: Buffer): void;
+
+    static isValid(value: xdr.Operation): boolean;
+
+    static toXDR(value: xdr.Operation): Buffer;
+
+    static fromXDR(input: Buffer, format?: 'raw'): xdr.Operation;
+
+    static fromXDR(input: string, format: 'hex' | 'base64'): xdr.Operation;
+
+    static validateXDR(input: Buffer, format?: 'raw'): boolean;
+
+    static validateXDR(input: string, format: 'hex' | 'base64'): boolean;
+  }
+}
+
+export namespace xdr {
+  export import Operation = xdrHidden.Operation2; // tslint:disable-line:strict-export-declare-modifiers
+
+  type Hash = Opaque[]; // workaround, cause unknown
+
   interface SignedInt {
     readonly MAX_VALUE: 2147483647;
     readonly MIN_VALUE: -2147483648;

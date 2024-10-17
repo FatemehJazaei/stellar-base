@@ -8,6 +8,12 @@ import * as XDR from '@stellar/js-xdr';
 
 
 var types = XDR.config(xdr => {
+// Workaround for https://github.com/stellar/xdrgen/issues/152
+//
+// The "correct" way would be to replace bare instances of each constant with
+// xdr.lookup("..."), but that's more error-prone.
+const SCSYMBOL_LIMIT = 1312;
+const SC_SPEC_DOC_LIMIT = 4000;
 
 // === xdr source ============================================================
 //
