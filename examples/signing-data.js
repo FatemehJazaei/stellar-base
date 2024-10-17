@@ -2,14 +2,29 @@
 
 const StellarBase = require('../lib/index.js'); 
 
-var keypair = StellarBase.Keypair.random();
+var key = StellarBase.Keypair.random();
+
+console.log('Keypair: ' );
+console.log(key);
+
+console.log('rawPublicKey: ' );
+console.log(key.rawPublicKey());
+console.log('publicKey: ' );
+console.log(key.publicKey());
+
+
+console.log('rawSecretKey: ' );
+console.log(key.rawSecretKey());
+console.log('secret: ' );
+console.log(key.secret());
 
 var data = 'data to sign';
-var signature = keypair.sign(data);
+var signature = key.sign(data);
 
-console.log('Signature: ' + signature.toString('hex'));
+console.log('Signature: ' );
+console.log(signature);
 
-if (StellarBase.verify(data, signature, keypair.rawPublicKey())) {
+if (StellarBase.verify(data, signature, key.rawPublicKey())) {
   console.log('OK!');
 } else {
   console.log('Bad signature!');
