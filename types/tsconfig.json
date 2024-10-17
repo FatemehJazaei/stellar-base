@@ -12,5 +12,5 @@
     "forceConsistentCasingInFileNames": true,
     "paths": { "stellar-base": ["../"] }
   },
-  "files": ["index.d.ts", "test.ts"]
+  "files": ["index.d.ts"]
 }

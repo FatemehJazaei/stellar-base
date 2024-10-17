@@ -1,8 +1,11 @@
-import * as StellarBase from '../src';
+// import * as StellarBase from '../src';
+
+const StellarBase = require('../lib/index.js'); 
 
 var keypair = StellarBase.Keypair.random();
+
 var data = 'data to sign';
-var signature = StellarBase.sign(data, keypair.rawSecretKey());
+var signature = keypair.sign(data);
 
 console.log('Signature: ' + signature.toString('hex'));
 

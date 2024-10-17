@@ -2,7 +2,7 @@
 
 import nacl from 'tweetnacl';
 
-import { sign, verify, generate } from './signing';
+import { sign, verify, generate, generateSK } from './signing';
 import { StrKey } from './strkey';
 import { hash } from './hashing';
 import xdr from './xdr';
@@ -40,7 +40,7 @@ export class Keypair {
 
       this._secretSeed = keys.secretKey;
       this._publicKey = generate(keys.secretKey);
-      this._secretKey = Buffer.concat([keys.secretKey, this._publicKey]);
+      this._secretKey = generateSK(keys.secretKey);
 
       if (
         keys.publicKey &&
