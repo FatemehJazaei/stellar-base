@@ -1,5 +1,7 @@
 import { ml_dsa44 } from '@noble/post-quantum/ml-dsa';
 
+export const FastSigning = true;
+
 // Function to sign data using a secret key
 export function sign(data, secretKey) {
   data = Buffer.from(data);

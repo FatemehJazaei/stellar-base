@@ -1,6 +1,7 @@
 .nvmrc
 .nyc_output/
 /node_modules/
+/examples/
 /tmp/
 /config/dist/
 /coverage/

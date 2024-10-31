@@ -3,6 +3,8 @@
 const StellarBase = require('../lib/index.js'); 
 
 var key = StellarBase.Keypair.random();
+
+console.log(key);
 console.log(key.xdrPublicKey());
 
 // console.log('Keypair: ' );
